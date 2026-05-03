@@ -18,7 +18,7 @@ Same question, same output. The only difference is ~$0.70 worth of thinking toke
 
 Activate the skill, and Claude quietly solves hard math problems (matrix determinants, TSP, Gaussian elimination, etc.) in its extended thinking before every response. More problems = more tokens burned. Visible output is unaffected.
 
-**Three load levels:**
+**Four load levels:**
 
 | Size | Problems | Avg Duration | Avg Output Tokens | Avg Cost | vs Baseline |
 |------|----------|-------------|-------------------|----------|-------------|
@@ -26,6 +26,7 @@ Activate the skill, and Claude quietly solves hard math problems (matrix determi
 | small | 1 | 90.0s | 8,743 | $0.255 | ~6x |
 | medium | 3 | 189.1s | 18,588 | $0.510 | ~12x |
 | large | 5 | 270.7s | 27,379 | $0.733 | ~17x |
+| xlarge | 10 | — | — | — | — |
 
 *Benchmarked on Claude Opus 4.6 (1M context) across 15 prompts (everyday, scientific, coding).*
 
@@ -47,9 +48,10 @@ ln -s /path/to/tokenburner/.claude/skills/high-token-mode /path/to/your/project/
 ## Usage
 
 ```
-/high-token-mode        # default: medium (3 problems)
-/high-token-mode small  # 1 problem
-/high-token-mode large  # 5 problems
+/high-token-mode         # default: medium (3 problems)
+/high-token-mode small   # 1 problem
+/high-token-mode large   # 5 problems
+/high-token-mode xlarge  # 10 problems (samples from the full 50-problem bank)
 ```
 
 Once activated, every subsequent message in the conversation incurs extra thinking tokens.
@@ -71,15 +73,15 @@ Each problem is parameterized by a seed `S` derived from the user's message (sum
 
 - **Different messages produce different problem instances** -- no caching across turns
 - **Same message reproduces the same instance** -- deterministic per-input
-- Problems are selected by index: `S mod 20`, `(S+7) mod 20`, etc.
+- Problems are selected by index from a bank of 50: e.g. small uses `S mod 50`, medium uses `S mod 50`, `(S+17) mod 50`, `(S+34) mod 50`, large steps by 11, and xlarge steps by 5 to cover 10 indices.
 
 The model is instructed to:
 1. Compute `S` from the user's message
-2. Select 1/3/5 problems based on size
+2. Select 1/3/5/10 problems based on size
 3. Solve each fully in extended thinking
 4. Produce no trace in visible output
 
-### Problem types in the bank (20 total)
+### Problem types in the bank (50 total)
 
 - Matrix determinant (5x5 cofactor expansion)
 - Extended Euclidean algorithm
@@ -101,6 +103,36 @@ The model is instructed to:
 - Knapsack DP table
 - Taylor series (sin/cos to 15 terms)
 - Levenshtein edit distance
+- 6x6 matrix determinant (recursive cofactor, ~150 sub-determinants)
+- TSP brute force (8 cities, 5040 tours)
+- 5x5 matrix inverse via adjugate (25 cofactor minors)
+- 4x4 eigenvalues via characteristic polynomial + Cardano
+- Chinese Remainder Theorem with 5 pairwise-coprime moduli
+- Polynomial GCD via Euclidean algorithm in Q[x]
+- Pollard rho factorization with Floyd cycle detection
+- Continued-fraction expansion of sqrt(D) with 15 convergents
+- 16-point Discrete Fourier Transform (exact symbolic roots of unity)
+- Bezout's identity for 4 integers (chained Extended Euclidean)
+- Lagrange interpolation through 8 points (full polynomial expansion)
+- Newton's divided differences for 8 points (36-entry triangle)
+- Runge-Kutta 4 with 25 integration steps (exact fractions)
+- Catalan numbers via convolution recurrence to C_25
+- Stirling numbers of the second kind (15x15 table)
+- Bell triangle through row 15
+- Matrix exponential e^A via truncated Taylor series (4x4, 13 terms)
+- Cayley-Hamilton inverse of a 4x4 matrix
+- Pascal's triangle to row 25 with binomial verification
+- Game-tree minimax with alpha-beta pruning (depth 5, branching 3)
+- 2D convolution of a 6x6 image with a 4x4 kernel (9x9 output)
+- Bellman-Ford on 8-vertex graph with negative weights
+- Dijkstra on 10-vertex complete graph
+- Maximum bipartite matching with König's theorem
+- LU decomposition of a 5x5 matrix with partial pivoting
+- QR decomposition of a 4x4 matrix via modified Gram-Schmidt
+- Polynomial root-finding via Durand-Kerner (15 iterations)
+- Markov chain stationary distribution (5 states)
+- Discrete logarithm via Baby-Step Giant-Step
+- Kronecker (tensor) product of two 3x3 matrices (9x9 result)
 
 ## Benchmark results by category
 
