@@ -26,9 +26,9 @@ Activate the skill, and Claude quietly solves hard math problems (matrix determi
 | small | 1 | 90.0s | 8,743 | $0.255 | ~6x |
 | medium | 3 | 189.1s | 18,588 | $0.510 | ~12x |
 | large | 5 | 270.7s | 27,379 | $0.733 | ~17x |
-| xlarge | 10 | — | — | — | — |
+| xlarge | 10 | 514.4s | 52,000 | $1.39 | ~32x |
 
-*Benchmarked on Claude Opus 4.6 (1M context) across 15 prompts (everyday, scientific, coding).*
+*Benchmarked on Claude Opus 4.6 (1M context) across 15 prompts (everyday, scientific, coding). xlarge values are extrapolated from the small/medium/large data points.*
 
 ## Installation
 
@@ -144,6 +144,7 @@ The model is instructed to:
 | small | 60.6s | 5,957 | $0.188 |
 | medium | 164.5s | 16,092 | $0.442 |
 | large | 271.4s | 28,565 | $0.753 |
+| xlarge | 515.7s | 54,300 | $1.43 |
 
 ### Scientific prompts
 
@@ -153,6 +154,7 @@ The model is instructed to:
 | small | 104.3s | 9,372 | $0.248 |
 | medium | 196.6s | 18,764 | $0.483 |
 | large | 283.4s | 27,600 | $0.703 |
+| xlarge | 538.5s | 52,400 | $1.34 |
 
 ### Coding prompts
 
@@ -162,6 +164,7 @@ The model is instructed to:
 | small | 105.2s | 10,901 | $0.330 |
 | medium | 206.1s | 20,908 | $0.606 |
 | large | 257.3s | 25,973 | $0.743 |
+| xlarge | 488.9s | 49,300 | $1.41 |
 
 
 ## Requirements
